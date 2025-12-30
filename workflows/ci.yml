@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Maven + Coverage + tsDetect
 
 on:
   push:
@@ -26,19 +26,32 @@ jobs:
     - name: Run tests with coverage
       run: mvn test
 
-    - name: Upload JaCoCo coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: jacoco-report
-        path: target/site/jacoco
+    - name: Parse JaCoCo XML and get coverage %
+      id: coverage
+      run: |
+        echo "Parsing JaCoCo XML..."
+        COVERAGE=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
+        TOTAL=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
+        PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
+        echo "coverage=$PERCENT" >> $GITHUB_OUTPUT
 
     - name: Run tsDetect via Docker
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app your-tsdetect-image /app
+        mkdir -p target/tsdetect-output
+        docker run --rm -v ${{ github.workspace }}:/app your-tsdetect-image /app > target/tsdetect-output/tsdetect.txt || true
+        TS_SMELLS=$(wc -l < target/tsdetect-output/tsdetect.txt)
+        echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
 
-    - name: Upload tsDetect report
-      uses: actions/upload-artifact@v3
-      with:
-        name: tsdetect-report
-        path: target/tsdetect-output
+    - name: Update README.md with coverage and tsDetect
+      run: |
+        echo "Updating README.md..."
+        sed -i '/<!-- COVERAGE -->/c\**Coverage:** ${{ steps.coverage.outputs.coverage }}%' README.md
+        sed -i '/<!-- TSSMELLS -->/c\**Test Smells:** ${{ steps.build.outputs.ts_smells }}' README.md
 
+    - name: Commit README update
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add README.md
+        git commit -m "Update coverage and test smells [skip ci]" || echo "No changes"
+        git push
