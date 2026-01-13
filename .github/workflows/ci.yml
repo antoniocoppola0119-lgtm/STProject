@@ -36,8 +36,9 @@ jobs:
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
 
 
-      name: Install xmllint
+    - name: Install xmllint
       run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+      
 
     - name: Parse JaCoCo XML and get coverage %
       id: coverage
