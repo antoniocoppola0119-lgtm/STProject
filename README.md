@@ -1,6 +1,6 @@
 # STProject
 
-**Coverage:** 72%
+**Coverage:** 58%
 
 **Test Smells:** 0
 
