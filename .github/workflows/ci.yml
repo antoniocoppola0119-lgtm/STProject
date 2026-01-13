@@ -58,12 +58,13 @@ jobs:
     - name: Update README.md with coverage and tsDetect
       run: |
         echo "Updating README.md..."
-        sed -i '/<!-- COVERAGE -->/c\**Coverage:** ${{ steps.coverage.outputs.coverage }}%' README.md
-        sed -i '/<!-- TSSMELLS -->/c\**Test Smells:** ${{ steps.build.outputs.ts_smells }}' README.md
+        # Sovrascrive direttamente le righe di Coverage, Test Smells e Test Results
+        sed -i '/^**Coverage:**/c\**Coverage:** ${{ steps.coverage.outputs.coverage }}%' README.md
+        sed -i '/^**Test Smells:**/c\**Test Smells:** ${{ steps.build.outputs.ts_smells }}' README.md
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
-          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** All tests passed ✅|" README.md
+          sed -i '/^**Test Results:**/c\**Test Results:** All tests passed ✅' README.md
         else
-          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
+          sed -i '/^**Test Results:**/c\**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed' README.md
         fi
 
     - name: Commit README update
