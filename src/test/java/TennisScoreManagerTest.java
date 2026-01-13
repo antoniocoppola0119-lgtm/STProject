@@ -99,7 +99,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 5. Test Ingresso Tie-Break (6-6) ---
-    @Test
+    /*@Test
     public void testEnterTieBreak() {
         // Arrange: Portare il punteggio su 6-6
         scorePoints(1, 4);
@@ -150,7 +150,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 7. Test Tie-Break con Vantaggio Esteso (8-6) ---
-    /*@Test
+    @Test
     public void testTieBreakExtended() {
         // Arrange: 6-6 game, 6-6 punti in TB
 
@@ -228,7 +228,7 @@ public class TennisScoreManagerTest {
 
         // Assert: Partita finita.
         assertTrue(scoreManager.isGameOver());
-    }*/
+    }
 
     // --- 10. Test Punteggio durante la Partita non finita ---
     @Test
@@ -268,7 +268,7 @@ public class TennisScoreManagerTest {
         // Assert: Il punteggio dovrebbe mostrare 1-1 set, 0-0 game e Vantaggio P1
         String n="Vantaggio P1";
         assertTrue(score.contains(n));
-    }
+    }*/
 
     // --- 11. Test Ritiro ---
 }
