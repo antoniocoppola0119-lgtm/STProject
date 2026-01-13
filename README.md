@@ -5,3 +5,7 @@
 
 <!-- TSSMELLS -->
 **Test Smells:** 0
+
+<!-- TESTRESULT -->
+**Test Results:** N/A
+

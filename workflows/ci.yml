@@ -25,6 +25,14 @@ jobs:
 
     - name: Run tests with coverage
       run: mvn test
+      continue-on-error: true
+
+    - name: Extract test failures
+      id: testfail
+      run: |
+        FAILURES=$(grep -R "Failures:" target/surefire-reports | awk '{sum += $2} END {print sum+0}')
+        echo "failures=$FAILURES" >> $GITHUB_OUTPUT
+
 
     - name: Parse JaCoCo XML and get coverage %
       id: coverage
@@ -47,6 +55,11 @@ jobs:
         echo "Updating README.md..."
         sed -i '/<!-- COVERAGE -->/c\**Coverage:** ${{ steps.coverage.outputs.coverage }}%' README.md
         sed -i '/<!-- TSSMELLS -->/c\**Test Smells:** ${{ steps.build.outputs.ts_smells }}' README.md
+        if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
+          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** All tests passed ✅|" README.md
+        else
+          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
+        fi
 
     - name: Commit README update
       run: |
