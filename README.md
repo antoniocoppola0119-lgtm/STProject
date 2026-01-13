@@ -1,11 +1,11 @@
 # STProject
 
-<!-- COVERAGE -->
+**Coverage:** 73%
 **Coverage:** 0%
 
-<!-- TSSMELLS -->
+**Test Smells:** 
 **Test Smells:** 0
 
-<!-- TESTRESULT -->
+**Test Results:** All tests passed ✅
 **Test Results:** N/A
 
