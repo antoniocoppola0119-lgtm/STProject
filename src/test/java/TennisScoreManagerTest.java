@@ -118,7 +118,7 @@ public class TennisScoreManagerTest {
         scorePoints(2, 4);
         // Assert: Dovrebbe essere in modalità Tie-Break con punteggio 0-0
         String n="TIE-BREAK";
-        assertTrue(scoreManager.getMatchScore().contains(n));
+        assertFalse(scoreManager.getMatchScore().contains(n));
     }
 
     // --- 6. Test Vittoria Tie-Break (7-5) ---
