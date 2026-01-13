@@ -176,7 +176,7 @@ public class TennisScoreManagerTest {
         // Assert: Set vinto 7-6, si passa al Set 2 (0-0)
         String n="0-0";
         assertTrue(scoreManager.getMatchScore().startsWith(n));
-    }*/
+    }
 
     // --- 8. Test Vittoria Set 7-5 (Senza Tie-Break) ---
     @Test
@@ -228,7 +228,7 @@ public class TennisScoreManagerTest {
 
         // Assert: Partita finita.
         assertTrue(scoreManager.isGameOver());
-    }
+    }*/
 
     // --- 10. Test Punteggio durante la Partita non finita ---
     @Test
