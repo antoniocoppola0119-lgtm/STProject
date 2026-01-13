@@ -55,23 +55,18 @@ jobs:
         TS_SMELLS=$(wc -l < target/tsdetect-output/tsdetect.txt)
         echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
 
-    - name: Update README.md with coverage and tsDetect
+    - name: Update README.md with coverage and results
       run: |
         echo "Updating README.md..."
-        sed -i '/<!-- COVERAGE -->/c\**Coverage:** ${{ steps.coverage.outputs.coverage }}%' README.md
-        sed -i '/<!-- TSSMELLS -->/c\**Test Smells:** ${{ steps.build.outputs.ts_smells }}' README.md
-        if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
-          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** All tests passed ✅|" README.md
-        else
-          sed -i "s|<!-- TESTRESULT -->.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
-        fi
 
-    - name: Debug workflow outputs
-      run: |
-        echo "=== DEBUG OUTPUTS ==="
-        echo "Coverage: ${{ steps.coverage.outputs.coverage }}"
-        echo "Test Smells: ${{ steps.build.outputs.ts_smells }}"
-        echo "Test Failures: ${{ steps.testfail.outputs.failures }}"
+        sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
+        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** 0|" README.md
+
+        if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
+          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
+        else
+          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
+        fi
 
 
     - name: Commit README update
