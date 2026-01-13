@@ -26,7 +26,7 @@ jobs:
       run: mvn clean compile
 
     - name: Run tests with coverage
-      run: mvn test
+      run: mvn clean test jacoco:report
       continue-on-error: true
 
     - name: Extract test failures
@@ -34,10 +34,6 @@ jobs:
       run: |
         FAILURES=$(grep -R "Failures:" target/surefire-reports | awk '{sum += $2} END {print sum+0}')
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
-
-    - name: Run tests with coverage
-      run: mvn clean test jacoco:report
-      continue-on-error: true
 
     - name: Install xmllint
       run: sudo apt-get update && sudo apt-get install -y libxml2-utils
