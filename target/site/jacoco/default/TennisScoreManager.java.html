@@ -61,14 +61,14 @@ public class TennisScoreManager {
 <span class="fc" id="L61">            scoreP1++;</span>
 <span class="pc bpc" id="L62" title="1 of 2 branches missed.">        } else if (player == 2) {</span>
 <span class="fc" id="L63">            scoreP2++;</span>
-        } else {
+<span class="fc" id="L64">        } else {</span>
 <span class="nc" id="L65">            System.out.println(&quot;Errore: Giocatore non valido. Usa 1 o 2.&quot;);</span>
 <span class="nc" id="L66">            return;</span>
         }
 
 <span class="fc bfc" id="L69" title="All 2 branches covered.">        if (isTieBreak) {</span>
 <span class="fc" id="L70">            checkTieBreakPoint();</span>
-        } else {
+<span class="fc" id="L71">        } else {</span>
 <span class="fc" id="L72">            checkGamePoint();</span>
         }
 <span class="fc" id="L74">    }</span>
@@ -137,15 +137,15 @@ public class TennisScoreManager {
 <span class="fc" id="L137">            return;</span>
         }
 
-<span class="pc bpc" id="L140" title="6 of 12 branches missed.">        if (gamesP1 &gt;= 6 &amp;&amp; gamesP1 &gt;= gamesP2 + 2 || (gamesP1 == 7 &amp;&amp; gamesP2 == 5)</span>
-                || (gamesP2 == 7 &amp;&amp; gamesP2 == 6)) {
+<span class="pc bpc" id="L140" title="3 of 8 branches missed.">        if (gamesP1 &gt;= 6 &amp;&amp; gamesP1 &gt;= gamesP2 + 2 || (gamesP1 == 7 &amp;&amp; gamesP2 == 5)</span>
+<span class="pc bpc" id="L141" title="3 of 4 branches missed.">                || (gamesP2 == 7 &amp;&amp; gamesP2 == 6)) {</span>
 <span class="fc" id="L142">            setsP1[currentSet - 1] = gamesP1; // Memorizza i game del set</span>
 <span class="fc" id="L143">            setsP2[currentSet - 1] = gamesP2;</span>
 <span class="fc" id="L144">            System.out.println(&quot;\n*** SET &quot; + currentSet + &quot; Vinto da P1 (&quot; + gamesP1 + &quot;-&quot; + gamesP2 + &quot;) ***\n&quot;);</span>
 <span class="fc" id="L145">            moveToNextSet();</span>
 
-<span class="pc bpc" id="L147" title="6 of 12 branches missed.">        } else if (gamesP2 &gt;= 6 &amp;&amp; gamesP2 &gt;= gamesP1 + 2 || (gamesP2 == 7 &amp;&amp; gamesP1 == 5)</span>
-                || (gamesP2 == 7 &amp;&amp; gamesP1 == 6)) {
+<span class="pc bpc" id="L147" title="4 of 8 branches missed.">        } else if (gamesP2 &gt;= 6 &amp;&amp; gamesP2 &gt;= gamesP1 + 2 || (gamesP2 == 7 &amp;&amp; gamesP1 == 5)</span>
+<span class="pc bpc" id="L148" title="3 of 4 branches missed.">                || (gamesP2 == 7 &amp;&amp; gamesP1 == 6)) {</span>
 <span class="fc" id="L149">            setsP1[currentSet - 1] = gamesP1;</span>
 <span class="fc" id="L150">            setsP2[currentSet - 1] = gamesP2;</span>
 <span class="fc" id="L151">            System.out.println(&quot;\n*** SET &quot; + currentSet + &quot; Vinto da P2 (&quot; + gamesP2 + &quot;-&quot; + gamesP1 + &quot;) ***\n&quot;);</span>
