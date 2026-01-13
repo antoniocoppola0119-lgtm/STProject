@@ -26,7 +26,7 @@ jobs:
       run: mvn clean compile
 
     - name: Run tests with coverage
-      run: mvn clean test jacoco:report
+      run: mvn clean verify jacoco:report
       continue-on-error: true
 
     - name: Extract test failures
