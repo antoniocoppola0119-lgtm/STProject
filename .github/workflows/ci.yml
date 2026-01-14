@@ -66,6 +66,14 @@ jobs:
           echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
 
+    - name: Commit tsDetect output
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add tools/tsdetect/output.csv
+        git diff --cached --quiet || git commit -m "Update tsDetect output"
+        git push origin HEAD
+
     - name: Update README.md with coverage and results
       run: |
         echo "Updating README.md..."
