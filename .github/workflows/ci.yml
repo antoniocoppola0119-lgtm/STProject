@@ -33,6 +33,7 @@ jobs:
       id: testfail
       run: |
         FAILURES=$(grep -R "Failures:" target/surefire-reports | awk '{sum += $2} END {print sum+0}')
+        echo "failures found: $FAILURES"
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
 
     - name: Install xmllint
