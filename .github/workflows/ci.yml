@@ -50,17 +50,19 @@ jobs:
 
     - name: Run tsDetect
       run: |
-        mkdir -p target/tsdetect-output
         java -jar tools/tsdetect/TestSmellDetector.jar \
         tools/tsdetect/input.csv \
-        target/tsdetect-output
+        target/tsdetect-output/output.csv
+
 
     - name: Update README.md with coverage and results
       run: |
         echo "Updating README.md..."
 
         sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
-        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** 0|" README.md
+        
+        TS_SMELLS=$(tail -n +2 target/tsdetect-output/output.csv | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
+        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** $TS_SMELLS|" README.md
 
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
