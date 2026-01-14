@@ -26,6 +26,24 @@ jobs:
       run: mvn clean verify jacoco:report
       continue-on-error: true
 
+    - name: Copy Surefire reports to repo
+      run: |
+        mkdir -p reports/surefire
+        if [ -d target/surefire-reports ]; then
+          cp -R target/surefire-reports/* reports/surefire/
+        else
+          echo "Surefire reports not found, skipping copy"
+        fi
+
+    - name: Commit Surefire reports
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add reports/surefire || echo "Nothing to add"
+        git diff --cached --quiet || git commit -m "Update Surefire reports"
+        git push || echo "Nothing to push"
+
+
     - name: Install xmllint
       run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
