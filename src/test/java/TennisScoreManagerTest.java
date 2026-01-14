@@ -99,7 +99,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 5. Test Ingresso Tie-Break (6-6) ---
-    /*@Test
+    @Test
     public void testEnterTieBreak() {
         // Arrange: Portare il punteggio su 6-6
         scorePoints(1, 4);
@@ -268,7 +268,18 @@ public class TennisScoreManagerTest {
         // Assert: Il punteggio dovrebbe mostrare 1-1 set, 0-0 game e Vantaggio P1
         String n="Vantaggio P1";
         assertTrue(score.contains(n));
-    }*/
+    }
+
+    @Test
+void testGameScore() {
+    TennisScoreManager t = new TennisScoreManager();
+
+    assertEquals("0-0", t.getGameScore());
+    t.pointScored(1);
+    assertEquals("15-0", t.getGameScore());
+    t.pointScored(2);
+    assertEquals("15-15", t.getGameScore());
+}
 
     // --- 11. Test Ritiro ---
 }
