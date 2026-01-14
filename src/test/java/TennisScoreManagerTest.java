@@ -31,7 +31,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 1. Test Base Punti (Love, 15, 30, 40) ---
-    /*@Test
+    @Test
     public void testBaseScoring() {
         scorePoints(1, 1); // P1: 15-Love
         scorePoints(2, 2); // P2: 15-30
@@ -118,7 +118,7 @@ public class TennisScoreManagerTest {
         scorePoints(2, 4);
         // Assert: Dovrebbe essere in modalità Tie-Break con punteggio 0-0
         String n="TIE-BREAK";
-        assertFalse(scoreManager.getMatchScore().contains(n));
+        assertTrue(scoreManager.getMatchScore().contains(n));
     }
 
     // --- 6. Test Vittoria Tie-Break (7-5) ---
@@ -181,7 +181,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 8. Test Vittoria Set 7-5 (Senza Tie-Break) ---
-    /*@Test
+    @Test
     public void testSetWin7_5() throws InterruptedException {
         // Arrange: Portare il punteggio su 5-5
         scorePoints(1, 4);
@@ -202,7 +202,7 @@ public class TennisScoreManagerTest {
         // Assert: Set vinto 7-5, si passa al Set 2 (0-0).
         String n="1-0";
         assertTrue(scoreManager.getMatchScore().startsWith(n));
-    }*/
+    }
 
     // --- 9. Test Vittoria Partita (3-0 set per P1) ---
     @Test
@@ -270,17 +270,6 @@ public class TennisScoreManagerTest {
         // Assert: Il punteggio dovrebbe mostrare 1-1 set, 0-0 game e Vantaggio P1
         String n="Vantaggio P1";
         assertTrue(score.contains(n));
-    }
-
-    @Test
-    public void testGameScore() {
-        TennisScoreManager t = new TennisScoreManager();
-
-        assertEquals("Love-Love", t.getGameScore());
-        t.pointScored(1);
-        assertEquals("15-Love", t.getGameScore());
-        t.pointScored(2);
-        assertEquals("10-15", t.getGameScore());
     }
 
     /*@Test
