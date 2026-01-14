@@ -176,7 +176,7 @@ public class TennisScoreManagerTest {
         // Assert: Set vinto 7-6, si passa al Set 2 (0-0)
         String n="0-0";
         assertTrue(scoreManager.getMatchScore().startsWith(n));
-        assertTrue(scoreManager.getMatchScore().startsWith(n));
+        //assertTrue(scoreManager.getMatchScore().startsWith(n));
 
     }
 
