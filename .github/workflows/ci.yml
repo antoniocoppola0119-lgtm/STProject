@@ -48,12 +48,12 @@ jobs:
         PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
         echo "coverage=$PERCENT" >> $GITHUB_OUTPUT
 
-    - name: Run tsDetect via Docker
+    - name: Run tsDetect
       run: |
         mkdir -p target/tsdetect-output
-        docker run --rm -v ${{ github.workspace }}:/app your-tsdetect-image /app > target/tsdetect-output/tsdetect.txt || true
-        TS_SMELLS=$(wc -l < target/tsdetect-output/tsdetect.txt)
-        echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
+        java -jar tools/tsdetect/TestSmellDetector.jar \
+        tools/tsdetect/input.csv \
+        target/tsdetect-output
 
     - name: Update README.md with coverage and results
       run: |
