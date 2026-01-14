@@ -51,21 +51,18 @@ jobs:
       id: tsdetect
       run: |
         rm -f tools/tsdetect/output.csv
-
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
-
-        GENERATED_FILE=$(ls -t Output_TestSmellDetection_*.csv | head -n 1)
-        mv "$GENERATED_FILE" tools/tsdetect/output.csv
-
-        echo "tsDetect output file: tools/tsdetect/output.csv"
-
-        TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | \
-        awk -F',' '{for(i=8;i<=NF;i++) {gsub(/ /,"",$i); sum+=$i}} END{print sum}')
-
-        echo "TS smells found: $TS_SMELLS"
-
-        echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
-
+        GENERATED_FILE=$(ls -1t Output_TestSmellDetection_*.csv | head -n 1)
+        if [ -f "$GENERATED_FILE" ]; then
+          mv "$GENERATED_FILE" tools/tsdetect/output.csv
+          echo "tsDetect output file: tools/tsdetect/output.csv"
+          TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | awk -F',' '{for(i=8;i<=NF;i++){gsub(/ /,"",$i); sum+=$i}} END{print sum}')
+          echo "TS smells found: $TS_SMELLS"
+          echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
+        else
+          echo "No tsDetect output file found!"
+          echo "ts_smells=0" >> $GITHUB_OUTPUT
+        fi
 
     - name: Update README.md with coverage and results
       run: |
