@@ -78,6 +78,24 @@ jobs:
           TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | awk -F',' '{for(i=8;i<=NF;i++){gsub(/ /,"",$i); sum+=$i}} END{print sum}')
           echo "TS smells found: $TS_SMELLS"
           echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
+
+          SMELLS_TABLE=$(awk -F',' '
+          NR>1 {
+            for (i=8; i<=NF; i++) {
+              gsub(/ /,"",$i)
+              if ($i > 0) smells[i] += $i
+            }
+          }
+          END {
+            print "| Smell | Count |"
+            print "|-------|-------|"
+            for (i=8; i<=NF; i++)
+              if (smells[i] > 0)
+                print "| Smell_" i " | " smells[i] " |"
+          }' tools/tsdetect/output.csv)
+
+          echo "smells_table=$SMELLS_TABLE" >> $GITHUB_OUTPUT
+
         else
           echo "No tsDetect output file found!"
           echo "ts_smells=0" >> $GITHUB_OUTPUT
@@ -102,6 +120,13 @@ jobs:
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
         else
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
+        fi
+
+        if [ -n "${{ steps.tsdetect.outputs.smells_table }}" ]; then
+          sed -i "/<!-- SMELLS_TABLE_START -->/,/<!-- SMELLS_TABLE_END -->/c\
+        <!-- SMELLS_TABLE_START -->\
+        ${{ steps.tsdetect.outputs.smells_table }}\
+        <!-- SMELLS_TABLE_END -->" README.md
         fi
 
     - name: Debug workflow outputs

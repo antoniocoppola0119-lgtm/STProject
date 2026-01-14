@@ -6,3 +6,5 @@
 
 **Test Results:** All tests passed ✅
 
+
+**Smells Summary:**
