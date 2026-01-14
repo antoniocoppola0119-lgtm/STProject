@@ -274,9 +274,9 @@ public class TennisScoreManagerTest {
     public void testGameScore() {
         TennisScoreManager t = new TennisScoreManager();
 
-        assertEquals("0-0", t.getGameScore());
+        assertEquals("Love-Love", t.getGameScore());
         t.pointScored(1);
-        assertEquals("15-0", t.getGameScore());
+        assertEquals("15-Love", t.getGameScore());
         t.pointScored(2);
         assertEquals("15-15", t.getGameScore());
     }
