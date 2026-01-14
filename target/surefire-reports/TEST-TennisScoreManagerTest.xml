@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="TennisScoreManagerTest" time="0.242" tests="11" errors="0" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="TennisScoreManagerTest" time="0.197" tests="11" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IT"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\anton\AppData\Local\Temp\surefire7462819884045186646\surefirebooter-20260114154933758_3.jar C:\Users\anton\AppData\Local\Temp\surefire7462819884045186646 2026-01-14T15-49-33_561-jvmRun1 surefire-20260114154933758_1tmp surefire_0-20260114154933758_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\anton\AppData\Local\Temp\surefire7546431514409309845\surefirebooter-20260114165257357_3.jar C:\Users\anton\AppData\Local\Temp\surefire7546431514409309845 2026-01-14T16-52-57_210-jvmRun1 surefire-20260114165257357_1tmp surefire_0-20260114165257357_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\anton\OneDrive\Documenti\GitHub\STProject\target\test-classes;C:\Users\anton\OneDrive\Documenti\GitHub\STProject\target\classes;C:\Users\anton\.m2\repository\junit\junit\4.13.1\junit-4.13.1.jar;C:\Users\anton\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\anton\AppData\Local\Temp\surefire7462819884045186646\surefirebooter-20260114154933758_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\anton\AppData\Local\Temp\surefire7546431514409309845\surefirebooter-20260114165257357_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.9+7-LTS-338"/>
@@ -58,7 +58,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testSetWinStandard" classname="TennisScoreManagerTest" time="0.066">
+  <testcase name="testSetWinStandard" classname="TennisScoreManagerTest" time="0.061">
     <system-out><![CDATA[
 *** SET 1 Vinto da P1 (6-4) ***
 
@@ -72,49 +72,15 @@
   </testcase>
   <testcase name="testDeuceAndAdvantage2" classname="TennisScoreManagerTest" time="0.0"/>
   <testcase name="testBaseScoring" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testTieBreakWin" classname="TennisScoreManagerTest" time="0.0">
+  <testcase name="testTieBreakWin" classname="TennisScoreManagerTest" time="0.003">
     <system-out><![CDATA[
 *** INIZIO TIE-BREAK ***
 
 ]]></system-out>
   </testcase>
   <testcase name="testDeuceAndAdvantage" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testEnterTieBreak" classname="TennisScoreManagerTest" time="0.025">
-    <failure type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError
-	at org.junit.Assert.fail(Assert.java:87)
-	at org.junit.Assert.assertTrue(Assert.java:42)
-	at org.junit.Assert.assertTrue(Assert.java:53)
-	at TennisScoreManagerTest.testEnterTieBreak(TennisScoreManagerTest.java:121)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
-	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:316)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.executeWithRerun(JUnit4Provider.java:240)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:214)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:155)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-]]></failure>
-  </testcase>
-  <testcase name="testMatchWin3_0" classname="TennisScoreManagerTest" time="0.013">
+  <testcase name="testEnterTieBreak" classname="TennisScoreManagerTest" time="0.0"/>
+  <testcase name="testMatchWin3_0" classname="TennisScoreManagerTest" time="0.004">
     <system-out><![CDATA[
 *** SET 1 Vinto da P1 (6-0) ***
 
@@ -130,13 +96,13 @@
 *** PARTITA VINTA DAL GIOCATORE 1! (3 Set a 0) ***
 ]]></system-out>
   </testcase>
-  <testcase name="testSetWin7_5" classname="TennisScoreManagerTest" time="0.0">
+  <testcase name="testSetWin7_5" classname="TennisScoreManagerTest" time="0.002">
     <system-out><![CDATA[
 *** SET 1 Vinto da P1 (7-5) ***
 
 ]]></system-out>
   </testcase>
-  <testcase name="testMatchScoreInProgress" classname="TennisScoreManagerTest" time="0.005">
+  <testcase name="testMatchScoreInProgress" classname="TennisScoreManagerTest" time="0.004">
     <system-out><![CDATA[
 *** SET 1 Vinto da P1 (6-0) ***
 
