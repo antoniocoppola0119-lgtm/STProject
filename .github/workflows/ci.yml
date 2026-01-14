@@ -49,7 +49,6 @@ jobs:
 
     - name: Run tsDetect
       run: |
-        > tools/tsdetect/output.csv
         java -jar tools/tsdetect/TestSmellDetector.jar \
         tools/tsdetect/input.csv \
         tools/tsdetect/output.csv
