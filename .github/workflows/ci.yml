@@ -38,7 +38,6 @@ jobs:
     - name: Install xmllint
       run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
-
     - name: Parse JaCoCo XML and get coverage %
       id: coverage
       run: |
@@ -54,15 +53,20 @@ jobs:
         java -jar tools/tsdetect/TestSmellDetector.jar \
         tools/tsdetect/input.csv \
         tools/tsdetect/output.csv
+      
+    - name: Calculate test smells
+      id: tsdetect
+      run: |
+        OUTPUT_FILE=$(ls -t target/tsdetect-output/Output_TestSmellDetection_*.csv | head -n 1)
+        TS_SMELLS=$(tail -n +2 "$OUTPUT_FILE" | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
+        echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
 
     - name: Update README.md with coverage and results
       run: |
         echo "Updating README.md..."
 
         sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
-
-        TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
-        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** $TS_SMELLS|" README.md
+        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.tsdetect.outputs.ts_smells }}|" README.md
 
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
@@ -74,7 +78,7 @@ jobs:
       run: |
         echo "=== DEBUG OUTPUTS ==="
         echo "Coverage: ${{ steps.coverage.outputs.coverage }}"
-        echo "Test Smells: ${{ steps.build.outputs.ts_smells }}"
+        echo "Test Smells: ${{ steps.tsdetect.outputs.ts_smells }}"
         echo "Test Failures: ${{ steps.testfail.outputs.failures }}"
 
     - name: Commit README update
