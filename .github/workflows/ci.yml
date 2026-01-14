@@ -53,6 +53,14 @@ jobs:
         java -jar tools/tsdetect/TestSmellDetector.jar \
         tools/tsdetect/input.csv \
         tools/tsdetect/output.csv
+
+    - name: Check CSV content
+      run: |
+        echo "Content of tools/tsdetect/output.csv:"
+        cat tools/tsdetect/output.csv
+        echo "Number of lines:"
+        wc -l tools/tsdetect/output.csv
+
       
     - name: Calculate TS smells from fixed CSV
       id: ts_smells
