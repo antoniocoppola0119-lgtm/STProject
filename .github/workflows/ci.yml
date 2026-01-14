@@ -53,13 +53,6 @@ jobs:
         tools/tsdetect/input.csv \
         tools/tsdetect/output.csv
 
-    - name: Check CSV content
-      run: |
-        echo "Content of tools/tsdetect/output.csv:"
-        cat tools/tsdetect/output.csv
-        echo "Number of lines:"
-        wc -l tools/tsdetect/output.csv
-
       
     - name: Calculate TS smells from fixed CSV
       id: ts_smells
@@ -75,7 +68,7 @@ jobs:
         echo "Updating README.md..."
 
         sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
-        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.tsdetect.outputs.ts_smells }}|" README.md
+        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.ts_smells.outputs.ts_smells }}|" README.md
 
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
@@ -87,7 +80,7 @@ jobs:
       run: |
         echo "=== DEBUG OUTPUTS ==="
         echo "Coverage: ${{ steps.coverage.outputs.coverage }}"
-        echo "Test Smells: ${{ steps.tsdetect.outputs.ts_smells }}"
+        echo "Test Smells: ${{ steps.ts_smells.outputs.ts_smells }}"
         echo "Test Failures: ${{ steps.testfail.outputs.failures }}"
 
     - name: Commit README update
