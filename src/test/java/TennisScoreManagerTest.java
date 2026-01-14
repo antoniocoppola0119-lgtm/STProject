@@ -271,15 +271,15 @@ public class TennisScoreManagerTest {
     }
 
     @Test
-void testGameScore() {
-    TennisScoreManager t = new TennisScoreManager();
+    public void testGameScore() {
+        TennisScoreManager t = new TennisScoreManager();
 
-    assertEquals("0-0", t.getGameScore());
-    t.pointScored(1);
-    assertEquals("15-0", t.getGameScore());
-    t.pointScored(2);
-    assertEquals("15-15", t.getGameScore());
-}
+        assertEquals("0-0", t.getGameScore());
+        t.pointScored(1);
+        assertEquals("15-0", t.getGameScore());
+        t.pointScored(2);
+        assertEquals("15-15", t.getGameScore());
+    }
 
     // --- 11. Test Ritiro ---
 }
