@@ -22,10 +22,7 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: Build project
-      run: mvn clean compile
-
-    - name: Run tests with coverage
+    - name: Build, test and coverage
       run: mvn clean verify jacoco:report
       continue-on-error: true
 
