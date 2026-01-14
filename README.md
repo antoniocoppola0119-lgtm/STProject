@@ -2,7 +2,7 @@
 
 **Coverage:** 73%
 
-**Test Smells:** 
+**Test Smells:** 38
 
 **Test Results:** All tests passed ✅
 
