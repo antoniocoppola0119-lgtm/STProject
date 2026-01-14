@@ -5,6 +5,3 @@
 **Test Smells:** 22
 
 **Test Results:** All tests passed ✅
-
-
-**Smells Summary:**
