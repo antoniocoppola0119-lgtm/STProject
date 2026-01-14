@@ -42,9 +42,14 @@ jobs:
       id: coverage
       run: |
         echo "Parsing JaCoCo XML..."
-        COVERAGE=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
-        TOTAL=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
-        PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
+        if [ -f target/site/jacoco/jacoco.xml ]; then
+          COVERAGE=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
+          TOTAL=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
+          PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
+        else
+          echo "jacoco.xml not found, setting coverage to 0"
+          PERCENT=0
+        fi
         echo "coverage=$PERCENT" >> $GITHUB_OUTPUT
 
     - name: Run tsDetect and save output
