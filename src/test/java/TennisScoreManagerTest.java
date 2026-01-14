@@ -283,12 +283,12 @@ public class TennisScoreManagerTest {
         assertEquals("15-15", t.getGameScore());
     }
 
-    /*@Test
+    @Test
     public void smellBomb() {
         assertTrue(true);
         assertTrue(true);
         assertTrue(true);
-    }*/
+    }
 
 
     // --- 11. Test Ritiro ---

@@ -47,19 +47,22 @@ jobs:
         PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
         echo "coverage=$PERCENT" >> $GITHUB_OUTPUT
 
-    - name: Run tsDetect
+    - name: Run tsDetect and save output
+      id: tsdetect
       run: |
-        java -jar tools/tsdetect/TestSmellDetector.jar \
-        tools/tsdetect/input.csv \
-        tools/tsdetect/output.csv
+        rm -f tools/tsdetect/output.csv
 
-      
-    - name: Calculate TS smells from fixed CSV
-      id: ts_smells
-      run: |
-        OUTPUT_FILE="tools/tsdetect/output.csv"
-        TS_SMELLS=$(tail -n +2 "$OUTPUT_FILE" | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
+        java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
+
+        GENERATED_FILE=$(ls -t Output_TestSmellDetection_*.csv | head -n 1)
+        mv "$GENERATED_FILE" tools/tsdetect/output.csv
+
+        echo "tsDetect output file: tools/tsdetect/output.csv"
+
+        TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
+
         echo "TS smells found: $TS_SMELLS"
+
         echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
 
 
@@ -68,7 +71,7 @@ jobs:
         echo "Updating README.md..."
 
         sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
-        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.ts_smells.outputs.ts_smells }}|" README.md
+        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.tsdetect.outputs.ts_smells }}|" README.md
 
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
           sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
@@ -80,7 +83,7 @@ jobs:
       run: |
         echo "=== DEBUG OUTPUTS ==="
         echo "Coverage: ${{ steps.coverage.outputs.coverage }}"
-        echo "Test Smells: ${{ steps.ts_smells.outputs.ts_smells }}"
+        echo "Test Smells: ${{ steps.tsdetect.outputs.ts_smells }}"
         echo "Test Failures: ${{ steps.testfail.outputs.failures }}"
 
     - name: Commit README update
