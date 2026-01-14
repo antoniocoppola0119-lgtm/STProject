@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  * Test class of TennisScoreManager.java.
  * It contains 10 unit test cases for the TennisScoreManager class.
  * Follow the Arrange-Act-Assert pattern and cover typical and edge cases.
- * Contains only valid Java code.
+ * Contains only valid Java code..
  */
 public class TennisScoreManagerTest {
 
