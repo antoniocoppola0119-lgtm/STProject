@@ -29,8 +29,7 @@ jobs:
     - name: Extract test failures
       id: testfail
       run: |
-        FAILURES=$(grep -R "Failures:" target/surefire-reports | awk '{sum += $2} END {print sum+0}')
-        echo "failures found: $FAILURES"
+        FAILURES=$(xmllint --xpath "sum(//testsuite/@failures)" target/surefire-reports/TEST-*.xml)
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
 
     - name: Install xmllint
