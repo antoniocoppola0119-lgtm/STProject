@@ -26,14 +26,14 @@ jobs:
       run: mvn clean verify jacoco:report
       continue-on-error: true
 
+    - name: Install xmllint
+      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
     - name: Extract test failures
       id: testfail
       run: |
         FAILURES=$(xmllint --xpath "sum(//testsuite/@failures)" target/surefire-reports/TEST-*.xml)
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
-
-    - name: Install xmllint
-      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
     - name: Parse JaCoCo XML and get coverage %
       id: coverage
