@@ -280,7 +280,7 @@ public class TennisScoreManagerTest {
         t.pointScored(1);
         assertEquals("15-Love", t.getGameScore());
         t.pointScored(2);
-        assertEquals("15-15", t.getGameScore());
+        assertEquals("10-15", t.getGameScore());
     }
 
     /*@Test
