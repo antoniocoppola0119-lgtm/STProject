@@ -69,9 +69,9 @@ jobs:
 
     - name: Copy jacoco.csv to repo
       run: |
-        mkdir -p coverage
+        mkdir -p coverage/jacoco
         if [ -f target/site/jacoco/jacoco.csv ]; then
-          cp target/site/jacoco/jacoco.csv coverage/jacoco.csv
+          cp target/site/jacoco/jacoco.csv coverage/jacoco/jacoco.csv
         else
           echo "jacoco.csv not found, skipping copy"
         fi
@@ -80,7 +80,7 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add coverage/jacoco.csv || echo "Nothing to add"
+        git add coverage/jacoco/jacoco.csv || echo "Nothing to add"
         git diff --cached --quiet || git commit -m "Update JaCoCo coverage report"
         git push || echo "Nothing to push"
 
