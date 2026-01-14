@@ -57,7 +57,7 @@ jobs:
     - name: Calculate test smells
       id: tsdetect
       run: |
-        OUTPUT_FILE=$(ls -t Output_TestSmellDetection_*.csv | head -n 1)
+        OUTPUT_FILE=$(ls -t tools/tsedetect/output.csv | head -n 1)
         TS_SMELLS=$(tail -n +2 "$OUTPUT_FILE" | awk -F, '{sum=0; for(i=8;i<=NF;i++) sum+=$i; total+=sum} END{print total}')
         echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
 
