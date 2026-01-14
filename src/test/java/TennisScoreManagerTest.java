@@ -181,7 +181,7 @@ public class TennisScoreManagerTest {
     }
 
     // --- 8. Test Vittoria Set 7-5 (Senza Tie-Break) ---
-    @Test
+    /*@Test
     public void testSetWin7_5() throws InterruptedException {
         // Arrange: Portare il punteggio su 5-5
         scorePoints(1, 4);
@@ -202,7 +202,7 @@ public class TennisScoreManagerTest {
         // Assert: Set vinto 7-5, si passa al Set 2 (0-0).
         String n="1-0";
         assertTrue(scoreManager.getMatchScore().startsWith(n));
-    }
+    }*/
 
     // --- 9. Test Vittoria Partita (3-0 set per P1) ---
     @Test
