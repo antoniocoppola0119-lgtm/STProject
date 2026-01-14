@@ -176,7 +176,7 @@ public class TennisScoreManagerTest {
         // Assert: Set vinto 7-6, si passa al Set 2 (0-0)
         String n="0-0";
         assertTrue(scoreManager.getMatchScore().startsWith(n));
-        assertTrue(scoreManager.getMatchScore().startsWith(n));
+        //assertTrue(scoreManager.getMatchScore().startsWith(n));
 
     }
 
@@ -283,12 +283,12 @@ public class TennisScoreManagerTest {
         assertEquals("15-15", t.getGameScore());
     }
 
-    @Test
+    /*@Test
     public void smellBomb() {
         assertTrue(true);
         assertTrue(true);
         assertTrue(true);
-    }
+    }*/
 
 
     // --- 11. Test Ritiro ---
