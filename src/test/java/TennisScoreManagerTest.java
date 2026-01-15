@@ -306,7 +306,6 @@ public class TennisScoreManagerTest {
         scoreManager.printScore();
 
         String output = out.toString();
-        assertTrue(output.contains("TIE-BREAK"));
         assertTrue(output.contains("Punti Correnti: TIE-BREAK"));
 
         System.setOut(System.out);

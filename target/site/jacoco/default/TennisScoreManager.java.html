@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TennisScoreManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">STProject</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">TennisScoreManager.java</span></div><h1>TennisScoreManager.java</h1><pre class="source lang-java linenums">// 
+//
+public class TennisScoreManager {
+
+<span class="fc" id="L5">    private int scoreP1 = 0;</span>
+<span class="fc" id="L6">    private int scoreP2 = 0;</span>
+
+<span class="fc" id="L8">    private int gamesP1 = 0;</span>
+<span class="fc" id="L9">    private int gamesP2 = 0;</span>
+
+<span class="fc" id="L11">    private int[] setsP1 = new int[5];</span>
+<span class="fc" id="L12">    private int[] setsP2 = new int[5];</span>
+<span class="fc" id="L13">    private int currentSet = 1;</span>
+
+<span class="fc" id="L15">    private boolean isTieBreak = false;</span>
+
+<span class="fc" id="L17">    private final String[] POINT_NAMES = { &quot;Love&quot;, &quot;15&quot;, &quot;30&quot;, &quot;40&quot;, &quot;Advantage&quot; };</span>
+<span class="fc" id="L18">    private final int MAX_SETS = 5;</span>
+
+    // --- Costruttore e Metodi di Base ---
+
+<span class="fc" id="L22">    public TennisScoreManager() {</span>
+        // Inizializza gli array dei set a zero per pulizia, anche se non strettamente
+        // necessario in Java
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="fc" id="L26">            setsP1[i] = 0;</span>
+<span class="fc" id="L27">            setsP2[i] = 0;</span>
+        }
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Resetta il punteggio dei punti per iniziare un nuovo game o set.
+     */
+    public void resetPoints() {
+<span class="fc" id="L35">        scoreP1 = 0;</span>
+<span class="fc" id="L36">        scoreP2 = 0;</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Resetta il punteggio dei game e dei punti per iniziare un nuovo set.
+     */
+    public void resetGameAndPoints() {
+<span class="fc" id="L43">        gamesP1 = 0;</span>
+<span class="fc" id="L44">        gamesP2 = 0;</span>
+<span class="fc" id="L45">        resetPoints();</span>
+<span class="fc" id="L46">        isTieBreak = false;</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Incrementa il punteggio del giocatore specificato.
+     *
+     * @param player Il giocatore che ha segnato il punto (1 o 2).
+     */
+    public void pointScored(int player) {
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (isGameOver()) {</span>
+<span class="nc" id="L56">            System.out.println(&quot;La partita è finita! Punteggio finale: &quot; + getMatchScore());</span>
+<span class="nc" id="L57">            return;</span>
+        }
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (player == 1) {</span>
+<span class="fc" id="L61">            scoreP1++;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        } else if (player == 2) {</span>
+<span class="fc" id="L63">            scoreP2++;</span>
+        } else {
+<span class="nc" id="L65">            System.out.println(&quot;Errore: Giocatore non valido. Usa 1 o 2.&quot;);</span>
+<span class="nc" id="L66">            return;</span>
+        }
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (isTieBreak) {</span>
+<span class="fc" id="L70">            checkTieBreakPoint();</span>
+        } else {
+<span class="fc" id="L72">            checkGamePoint();</span>
+        }
+<span class="fc" id="L74">    }</span>
+
+    public void checkGamePoint() {
+
+<span class="fc bfc" id="L78" title="All 4 branches covered.">        if (scoreP1 &gt;= 4 &amp;&amp; scoreP1 &gt;= scoreP2 + 2) {</span>
+<span class="fc" id="L79">            gamesP1++;</span>
+<span class="fc" id="L80">            resetPoints();</span>
+<span class="fc" id="L81">            checkSetPoint();</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">        } else if (scoreP2 &gt;= 4 &amp;&amp; scoreP2 &gt;= scoreP1 + 2) {</span>
+<span class="fc" id="L83">            gamesP2++;</span>
+<span class="fc" id="L84">            resetPoints();</span>
+<span class="fc" id="L85">            checkSetPoint();</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Calcola e restituisce la stringa del punteggio corrente del game standard.
+     */
+    public String getGameScore() {
+        // Partita finita
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (isGameOver()) {</span>
+<span class="nc" id="L95">            return &quot;PARTITA FINITA&quot;;</span>
+        }
+
+<span class="pc bpc" id="L98" title="1 of 8 branches missed.">        if (scoreP1 &lt; 4 &amp;&amp; scoreP2 &lt; 4 &amp;&amp; (scoreP1 != 3 || scoreP2 != 3)) {</span>
+<span class="fc" id="L99">            return POINT_NAMES[scoreP1] + &quot;-&quot; + POINT_NAMES[scoreP2];</span>
+        }
+
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        if (scoreP1 == scoreP2 &amp;&amp; scoreP1 &gt;= 3) {</span>
+<span class="fc" id="L103">            return &quot;Deuce&quot;;</span>
+        }
+
+<span class="pc bpc" id="L106" title="2 of 4 branches missed.">        if (scoreP1 &gt;= 3 &amp;&amp; scoreP1 == scoreP2 + 1) {</span>
+<span class="fc" id="L107">            return &quot;Vantaggio P1&quot;;</span>
+        }
+<span class="nc bnc" id="L109" title="All 4 branches missed.">        if (scoreP2 &gt;= 3 &amp;&amp; scoreP2 == scoreP2 + 1) {</span>
+<span class="nc" id="L110">            return &quot;Vantaggio P2&quot;;</span>
+        }
+
+<span class="nc" id="L113">        return &quot;Errore Game&quot;;</span>
+    }
+
+    public void checkTieBreakPoint() {
+<span class="fc bfc" id="L117" title="All 4 branches covered.">        if (scoreP1 &gt;= 7 &amp;&amp; scoreP1 &gt;= scoreP2 + 2) {</span>
+<span class="fc" id="L118">            gamesP1++;</span>
+<span class="fc" id="L119">            resetGameAndPoints();</span>
+<span class="fc" id="L120">            checkSetPoint();</span>
+<span class="pc bpc" id="L121" title="3 of 4 branches missed.">        } else if (scoreP2 &gt;= 7 &amp;&amp; scoreP2 &gt;= scoreP1 + 2) {</span>
+<span class="nc" id="L122">            gamesP2++;</span>
+<span class="nc" id="L123">            resetGameAndPoints();</span>
+<span class="nc" id="L124">            checkSetPoint();</span>
+        }
+<span class="fc" id="L126">    }</span>
+
+    public String getTieBreakScore() {
+<span class="nc" id="L129">        return &quot;TIE-BREAK: &quot; + scoreP1 + &quot;-&quot; + scoreP2;</span>
+    }
+
+    public void checkSetPoint() {
+<span class="fc bfc" id="L133" title="All 4 branches covered.">        if (gamesP1 == 6 &amp;&amp; gamesP2 == 6) {</span>
+<span class="fc" id="L134">            isTieBreak = true;</span>
+<span class="fc" id="L135">            resetPoints();</span>
+<span class="fc" id="L136">            System.out.println(&quot;\n*** INIZIO TIE-BREAK ***\n&quot;);</span>
+<span class="fc" id="L137">            return;</span>
+        }
+
+<span class="pc bpc" id="L140" title="6 of 12 branches missed.">        if (gamesP1 &gt;= 6 &amp;&amp; gamesP1 &gt;= gamesP2 + 2 || (gamesP1 == 7 &amp;&amp; gamesP2 == 5)</span>
+                || (gamesP2 == 7 &amp;&amp; gamesP2 == 6)) {
+<span class="fc" id="L142">            setsP1[currentSet - 1] = gamesP1; // Memorizza i game del set</span>
+<span class="fc" id="L143">            setsP2[currentSet - 1] = gamesP2;</span>
+<span class="fc" id="L144">            System.out.println(&quot;\n*** SET &quot; + currentSet + &quot; Vinto da P1 (&quot; + gamesP1 + &quot;-&quot; + gamesP2 + &quot;) ***\n&quot;);</span>
+<span class="fc" id="L145">            moveToNextSet();</span>
+
+<span class="pc bpc" id="L147" title="6 of 12 branches missed.">        } else if (gamesP2 &gt;= 6 &amp;&amp; gamesP2 &gt;= gamesP1 + 2 || (gamesP2 == 7 &amp;&amp; gamesP1 == 5)</span>
+                || (gamesP2 == 7 &amp;&amp; gamesP1 == 6)) {
+<span class="fc" id="L149">            setsP1[currentSet - 1] = gamesP1;</span>
+<span class="fc" id="L150">            setsP2[currentSet - 1] = gamesP2;</span>
+<span class="fc" id="L151">            System.out.println(&quot;\n*** SET &quot; + currentSet + &quot; Vinto da P2 (&quot; + gamesP2 + &quot;-&quot; + gamesP1 + &quot;) ***\n&quot;);</span>
+<span class="fc" id="L152">            moveToNextSet();</span>
+        }
+<span class="fc" id="L154">    }</span>
+
+    public void moveToNextSet() {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (!isGameOver()) {</span>
+<span class="fc" id="L158">            currentSet++;</span>
+<span class="fc" id="L159">            resetGameAndPoints();</span>
+        }
+<span class="fc" id="L161">    }</span>
+
+    public String getMatchScore() {
+<span class="fc" id="L164">        int setsWonP1 = 0;</span>
+<span class="fc" id="L165">        int setsWonP2 = 0;</span>
+
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (int i = 0; i &lt; currentSet; i++) {</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            if (setsP1[i] &gt; setsP2[i]) {</span>
+<span class="fc" id="L169">                setsWonP1++;</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            } else if (setsP2[i] &gt; setsP1[i]) {</span>
+<span class="fc" id="L171">                setsWonP2++;</span>
+            }
+        }
+
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (!isGameOver()) {</span>
+<span class="fc" id="L176">            return setsWonP1 + &quot;-&quot; + setsWonP2 + &quot; (Game: &quot; + gamesP1 + &quot;-&quot; + gamesP2 + &quot; &quot;</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">                    + (isTieBreak ? getTieBreakScore() : getGameScore()) + &quot;)&quot;;</span>
+        }
+
+<span class="nc" id="L180">        return &quot;P1: &quot; + setsWonP1 + &quot; Set | P2: &quot; + setsWonP2 + &quot; Set&quot;;</span>
+    }
+
+    public boolean isGameOver() {
+<span class="fc" id="L184">        int setsWonP1 = 0;</span>
+<span class="fc" id="L185">        int setsWonP2 = 0;</span>
+
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for (int i = 0; i &lt; currentSet; i++) {</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (setsP1[i] &gt; setsP2[i])</span>
+<span class="fc" id="L189">                setsWonP1++;</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (setsP2[i] &gt; setsP1[i])</span>
+<span class="fc" id="L191">                setsWonP2++;</span>
+        }
+
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (setsWonP1 == 3) {</span>
+<span class="fc" id="L195">            System.out.println(&quot;\n*** PARTITA VINTA DAL GIOCATORE 1! (3 Set a &quot; + setsWonP2 + &quot;) ***&quot;);</span>
+<span class="fc" id="L196">            return true;</span>
+        }
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (setsWonP2 == 3) {</span>
+<span class="nc" id="L199">            System.out.println(&quot;\n*** PARTITA VINTA DAL GIOCATORE 2! (3 Set a &quot; + setsWonP1 + &quot;) ***&quot;);</span>
+<span class="nc" id="L200">            return true;</span>
+        }
+
+<span class="fc" id="L203">        return false;</span>
+    }
+
+    public void printScore() {
+<span class="nc" id="L207">        System.out.println(&quot;------------------------------------------&quot;);</span>
+<span class="nc" id="L208">        System.out.print(&quot;Punteggio Set: P1 [&quot;);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        for (int i = 0; i &lt; currentSet - 1; i++) {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            System.out.print(setsP1[i] + (i &lt; currentSet - 2 ? &quot;, &quot; : &quot;&quot;));</span>
+        }
+<span class="nc" id="L212">        System.out.print(&quot;] - P2 [&quot;);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        for (int i = 0; i &lt; currentSet - 1; i++) {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            System.out.print(setsP2[i] + (i &lt; currentSet - 2 ? &quot;, &quot; : &quot;&quot;));</span>
+        }
+<span class="nc" id="L216">        System.out.println(&quot;]&quot;);</span>
+<span class="nc" id="L217">        System.out.println(&quot;Set Corrente (&quot; + currentSet + &quot;): P1 &quot; + gamesP1 + &quot; Game | P2 &quot; + gamesP2 + &quot; Game&quot;);</span>
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        String currentPoints = isTieBreak ? getTieBreakScore() : getGameScore();</span>
+<span class="nc" id="L220">        System.out.println(&quot;Punti Correnti: &quot; + currentPoints);</span>
+<span class="nc" id="L221">        System.out.println(&quot;------------------------------------------&quot;);</span>
+<span class="nc" id="L222">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
