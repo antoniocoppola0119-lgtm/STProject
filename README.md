@@ -1,7 +1,7 @@
 # STProject
 
-**Coverage:** 73%
+**Coverage:** 82%
 
-**Test Smells:** 22
+**Test Smells:** 30
 
 **Test Results:** All tests passed ✅
