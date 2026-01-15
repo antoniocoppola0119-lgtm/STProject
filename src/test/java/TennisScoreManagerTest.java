@@ -1,7 +1,10 @@
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 
 import static org.junit.Assert.*;
 
@@ -270,6 +273,43 @@ public class TennisScoreManagerTest {
         // Assert: Il punteggio dovrebbe mostrare 1-1 set, 0-0 game e Vantaggio P1
         String n="Vantaggio P1";
         assertTrue(score.contains(n));
+    }
+
+    @Test
+    public void testPrintScoreNormalGame() {
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
+        scoreManager.pointScored(1);
+
+        scoreManager.printScore();
+
+        String output = out.toString();
+        assertTrue(output.contains("Punteggio Set: P1 ["));
+        assertTrue(output.contains("Set Corrente (1): P1 0 Game | P2 0 Game"));
+        assertTrue(output.contains("Punti Correnti: 15-Love"));
+
+        System.setOut(System.out);
+    }
+
+    @Test
+    public void testPrintScoreTieBreak() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
+        for (int i = 0; i < 6; i++) {
+            scorePoints(1, 4);
+            scorePoints(2, 4);
+        }
+
+        scoreManager.printScore();
+
+        String output = out.toString();
+        assertTrue(output.contains("TIE-BREAK"));
+        assertTrue(output.contains("Punti Correnti: TIE-BREAK"));
+
+        System.setOut(System.out);
     }
 
     /*@Test
