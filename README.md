@@ -4,4 +4,4 @@
 
 **Test Smells:** 29
 
-**Test Results:** All tests passed ✅
+**Test Results:** Tutti i test passati!
