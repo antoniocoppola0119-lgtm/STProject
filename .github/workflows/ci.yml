@@ -34,22 +34,16 @@ jobs:
         else
           echo "Surefire reports not found, skipping copy"
         fi
-
-    - name: Commit Surefire reports
-      run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add reports/surefire || echo "Nothing to add"
         git diff --cached --quiet || git commit -m "Update Surefire reports"
         git push || echo "Nothing to push"
 
-
-    - name: Install xmllint
-      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-
     - name: Extract test failures
       id: testfail
       run: |
+        sudo apt-get update && sudo apt-get install -y libxml2-utils
         FAILURES=$(xmllint --xpath "sum(//testsuite/@failures)" target/surefire-reports/TEST-*.xml)
         echo "failures=$FAILURES" >> $GITHUB_OUTPUT
 
@@ -75,9 +69,6 @@ jobs:
         else
           echo "jacoco.csv not found, skipping copy"
         fi
-
-    - name: Commit jacoco.csv
-      run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add coverage/jacoco/jacoco.csv || echo "Nothing to add"
@@ -101,9 +92,6 @@ jobs:
           echo "No tsDetect output file found!"
           echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
-
-    - name: Commit tsDetect output
-      run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add tools/tsdetect/output.csv
@@ -118,23 +106,15 @@ jobs:
         sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.tsdetect.outputs.ts_smells }}|" README.md
 
         if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
-          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** All tests passed ✅|" README.md
+          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** Tutti i test passati!|" README.md
         else
-          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** ❌ ${{ steps.testfail.outputs.failures }} test failed|" README.md
+          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:**  ${{ steps.testfail.outputs.failures }} test falliti..|" README.md
         fi
 
-    - name: Debug workflow outputs
-      run: |
-        echo "=== DEBUG OUTPUTS ==="
-        echo "Coverage: ${{ steps.coverage.outputs.coverage }}"
-        echo "Test Smells: ${{ steps.tsdetect.outputs.ts_smells }}"
-        echo "Test Failures: ${{ steps.testfail.outputs.failures }}"
-
-    - name: Commit README update
-      run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add README.md
         git commit -m "Update coverage and test smells [skip ci]" || echo "No changes"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+
 
