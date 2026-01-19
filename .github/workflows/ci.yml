@@ -75,6 +75,28 @@ jobs:
         git diff --cached --quiet || git commit -m "Update JaCoCo coverage report"
         git push || echo "Nothing to push"
 
+    - name: Generate tsDetect input.csv
+      run: |
+        echo "Generating tsDetect input.csv..."
+
+        PROJECT_NAME=STProject
+        INPUT_FILE=tools/tsdetect/input.csv
+
+        rm -f $INPUT_FILE
+        touch $INPUT_FILE
+
+        find src/test/java -name "*Test.java" | while read testfile; do
+          classname=$(basename "$testfile" Test.java)
+          prodfile=$(find src/main/java -name "$classname.java" | head -n 1)
+
+          if [ -n "$prodfile" ]; then
+            echo "$PROJECT_NAME,$testfile,$prodfile" >> $INPUT_FILE
+          fi
+        done
+
+        echo "Final input.csv:"
+        cat $INPUT_FILE
+
     - name: Run tsDetect and save output
       id: tsdetect
       run: |
