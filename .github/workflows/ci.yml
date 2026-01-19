@@ -150,8 +150,8 @@ jobs:
         echo "## Test Classes" >> README.md
 
         for var in $(compgen -v | grep '_failures$'); do
-          testname=${var%_failures}  # rimuove _failures
-          failures=${!var}
+          testname=${var%_failures}
+          failures=${!var:-0}
           smells_var="${testname}_smells"
           smells=${!smells_var:-0}
 
@@ -161,11 +161,14 @@ jobs:
             result="Tutti i test passati!"
             coverage_str="Coverage: $coverage%"
           else
-            result="$failures test falliti.."
+            result="$failures test falliti"
             coverage_str="Coverage: N/A"
           fi
 
-          echo "- **$testname**: $coverage_str, Test Smells: $smells, Risultato: $result" >> README.md
+          echo "### $testname" >> README.md
+          echo "- $coverage_str" >> README.md
+          echo "- Test Smells: $smells" >> README.md
+          echo "- Risultato: $result" >> README.md
         done
 
         git config user.name "github-actions[bot]"
@@ -173,6 +176,5 @@ jobs:
         git add README.md
         git commit -m "Update coverage and test smells per test class [skip ci]" || echo "No changes"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-
 
 
