@@ -130,6 +130,9 @@ jobs:
     - name: Run tsDetect and save output
       id: tsdetect
       run: |
+        SUMMARY_FILE="reports/tests-summary.csv"
+        mkdir -p reports
+
         rm -f tools/tsdetect/output.csv
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
         GENERATED_FILE=$(ls -1t Output_TestSmellDetection_*.csv | head -n 1)
