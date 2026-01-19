@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="TennisScoreManagerTest" time="0.063" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="TennisScoreManagerTest" time="0.054" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -11,7 +11,7 @@
     <property name="java.vm.specification.version" value="21"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/temurin-21-jdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/runner/work/STProject/STProject/target/surefire/surefirebooter-20260119173913360_3.jar /home/runner/work/STProject/STProject/target/surefire 2026-01-19T17-39-13_107-jvmRun1 surefire-20260119173913360_1tmp surefire_0-20260119173913360_2tmp"/>
+    <property name="sun.java.command" value="/home/runner/work/STProject/STProject/target/surefire/surefirebooter-20260119180338751_3.jar /home/runner/work/STProject/STProject/target/surefire 2026-01-19T18-03-38_453-jvmRun1 surefire-20260119180338751_1tmp surefire_0-20260119180338751_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/runner/work/STProject/STProject/target/test-classes:/home/runner/work/STProject/STProject/target/classes:/home/runner/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -26,7 +26,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/runner/work/STProject/STProject/target/surefire/surefirebooter-20260119173913360_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/runner/work/STProject/STProject/target/surefire/surefirebooter-20260119180338751_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.9+10-LTS"/>
     <property name="user.name" value="runner"/>
@@ -53,22 +53,22 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testSetWinStandard" classname="TennisScoreManagerTest" time="0.036">
+  <testcase name="testSetWinStandard" classname="TennisScoreManagerTest" time="0.032">
     <system-out><![CDATA[
 *** SET 1 Vinto da P1 (6-4) ***
 
 ]]></system-out>
   </testcase>
   <testcase name="testPrintScoreTieBreak" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testTieBreakExtended" classname="TennisScoreManagerTest" time="0.0"/>
+  <testcase name="testTieBreakExtended" classname="TennisScoreManagerTest" time="0.001"/>
   <testcase name="testDeuceAndAdvantage2" classname="TennisScoreManagerTest" time="0.001"/>
-  <testcase name="testBaseScoring" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testTieBreakWin" classname="TennisScoreManagerTest" time="0.004"/>
-  <testcase name="testDeuceAndAdvantage" classname="TennisScoreManagerTest" time="0.001"/>
+  <testcase name="testBaseScoring" classname="TennisScoreManagerTest" time="0.002"/>
+  <testcase name="testTieBreakWin" classname="TennisScoreManagerTest" time="0.0"/>
+  <testcase name="testDeuceAndAdvantage" classname="TennisScoreManagerTest" time="0.0"/>
   <testcase name="testEnterTieBreak" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testMatchWin3_0" classname="TennisScoreManagerTest" time="0.007"/>
+  <testcase name="testMatchWin3_0" classname="TennisScoreManagerTest" time="0.004"/>
   <testcase name="testPrintScoreNormalGame" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testSetWin7_5" classname="TennisScoreManagerTest" time="0.001"/>
-  <testcase name="testMatchScoreInProgress" classname="TennisScoreManagerTest" time="0.0"/>
-  <testcase name="testGameWinFromAdvantage" classname="TennisScoreManagerTest" time="0.003"/>
+  <testcase name="testSetWin7_5" classname="TennisScoreManagerTest" time="0.0"/>
+  <testcase name="testMatchScoreInProgress" classname="TennisScoreManagerTest" time="0.001"/>
+  <testcase name="testGameWinFromAdvantage" classname="TennisScoreManagerTest" time="0.001"/>
 </testsuite>
