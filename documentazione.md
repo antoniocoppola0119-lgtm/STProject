@@ -9,10 +9,10 @@ Questo progetto utilizza le Github Actions per effettuare, dopo un push o una pu
 * `src/main/java/` → classi sorgenti
 * `src/test/java/` → classi di test JUnit (devono terminare con Test.java)
 * `tools/tsdetect/` → strumento tsDetect per l’analisi dei test smells
-* `reports/` → report generati da Surefire
-* `coverage/` → report di copertura JaCoCo
+* `reports/surefire` → report generati da Surefire
+* `coverage/jacoco` → report di copertura JaCoCo
 * `pom.xml` → file di configurazione Maven
-* .github/workflows/ci.yml -> workflow di "Continous Deployment" configurato con Maven
+* `.github/workflows/ci.yml` -> workflow di "Continous Deployment" configurato con Maven
 
 
 ### Lettura dei Risultati dei Test
