@@ -131,26 +131,16 @@ jobs:
       id: tsdetect
       run: |
         rm -f tools/tsdetect/output.csv
-
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
-
         GENERATED_FILE=$(ls -1t Output_TestSmellDetection_*.csv | head -n 1)
-        SUMMARY_FILE="reports/tests-summary.csv"
-
-        mkdir -p reports
-
-        if [ ! -f "$SUMMARY_FILE" ]; then
-          echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
-        fi
-
         if [ -f "$GENERATED_FILE" ]; then
           mv "$GENERATED_FILE" tools/tsdetect/output.csv
           echo "tsDetect output file: tools/tsdetect/output.csv"
 
-          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile smell1 smell2 smell3 smell4 smell5 smell6 smell7; do
+          # Leggi ogni test e calcola TS smells con awk
+          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile rest; do
             classname=$(basename "$testfile" .java)
-            total_smells=$((smell1 + smell2 + smell3 + smell4 + smell5 + smell6 + smell7))
-
+            total_smells=$(echo "$rest" | awk -F',' '{sum=0; for(i=1;i<=NF;i++){gsub(/ /,"",$i); sum+=$i} print sum}')
             echo "$classname smells: $total_smells"
             echo "${classname}_smells=$total_smells" >> $GITHUB_OUTPUT
 
@@ -160,13 +150,15 @@ jobs:
               echo "$classname,0,0,$total_smells" >> "$SUMMARY_FILE"
             fi
           done
+
         else
           echo "No tsDetect output file found!"
+          echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add tools/tsdetect/output.csv reports/tests-summary.csv
+        git add tools/tsdetect/output.csv
         git diff --cached --quiet || git commit -m "Update tsDetect output"
         git push origin HEAD
 
