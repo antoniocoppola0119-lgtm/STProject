@@ -58,19 +58,23 @@ jobs:
           echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
         done
 
-    - name: Parse JaCoCo XML and get coverage %
+    - name: Parse JaCoCo CSV and get coverage per test class
       id: coverage
       run: |
-        echo "Parsing JaCoCo XML..."
-        if [ -f target/site/jacoco/jacoco.xml ]; then
-          COVERAGE=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
-          TOTAL=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
-          PERCENT=$((COVERAGE * 100 / (COVERAGE + TOTAL)))
+        echo "Parsing JaCoCo CSV..."
+        CSV_FILE="target/site/jacoco/jacoco.csv"
+        if [ -f "$CSV_FILE" ]; then
+          tail -n +2 "$CSV_FILE" | while IFS=',' read -r group name desc instr_missed instr_covered method_missed method_covered branch_missed branch_covered; do
+            if [ "$instr_missed" != "" ] && [ "$instr_covered" != "" ]; then
+              percent=$(( instr_covered * 100 / (instr_covered + instr_missed) ))
+              classname=$(basename "$name" .java)
+              echo "$classname coverage: $percent%"
+              echo "${classname}_coverage=$percent" >> $GITHUB_OUTPUT
+            fi
+          done
         else
-          echo "jacoco.xml not found, setting coverage to 0"
-          PERCENT=0
+          echo "jacoco.csv not found, skipping coverage per class"
         fi
-        echo "coverage=$PERCENT" >> $GITHUB_OUTPUT
 
     - name: Copy jacoco.csv to repo
       run: |
@@ -117,37 +121,55 @@ jobs:
         if [ -f "$GENERATED_FILE" ]; then
           mv "$GENERATED_FILE" tools/tsdetect/output.csv
           echo "tsDetect output file: tools/tsdetect/output.csv"
-          TS_SMELLS=$(tail -n +2 tools/tsdetect/output.csv | awk -F',' '{for(i=8;i<=NF;i++){gsub(/ /,"",$i); sum+=$i}} END{print sum}')
-          echo "TS smells found: $TS_SMELLS"
-          echo "ts_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
+
+          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile smell1 smell2 smell3 smell4 smell5 smell6 smell7; do
+            classname=$(basename "$testfile" .java)
+            total_smells=$((smell1 + smell2 + smell3 + smell4 + smell5 + smell6 + smell7))
+            echo "$classname smells: $total_smells"
+            echo "${classname}_smells=$total_smells" >> $GITHUB_OUTPUT
+          done
 
         else
           echo "No tsDetect output file found!"
-          echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
+
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add tools/tsdetect/output.csv
         git diff --cached --quiet || git commit -m "Update tsDetect output"
         git push origin HEAD
 
-    - name: Update README.md with coverage and results
+    - name: Update README.md with coverage and results per test
       run: |
-        echo "Updating README.md..."
+        echo "Updating README.md for each test class..."
 
-        sed -i "s|^\*\*Coverage:\*\*.*|**Coverage:** ${{ steps.coverage.outputs.coverage }}%|" README.md
-        sed -i "s|^\*\*Test Smells:\*\*.*|**Test Smells:** ${{ steps.tsdetect.outputs.ts_smells }}|" README.md
+        sed -i '/^## Test Classes$/,$d' README.md
+        echo "## Test Classes" >> README.md
 
-        if [ "${{ steps.testfail.outputs.failures }}" -eq 0 ]; then
-          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:** Tutti i test passati!|" README.md
-        else
-          sed -i "s|^\*\*Test Results:\*\*.*|**Test Results:**  ${{ steps.testfail.outputs.failures }} test falliti..|" README.md
-        fi
+        for var in $(compgen -v | grep '_failures$'); do
+          testname=${var%_failures}  # rimuove _failures
+          failures=${!var}
+          smells_var="${testname}_smells"
+          smells=${!smells_var:-0}
+
+          if [ "$failures" -eq 0 ]; then
+            coverage_var="${testname}_coverage"
+            coverage=${!coverage_var:-0}
+            result="Tutti i test passati!"
+            coverage_str="Coverage: $coverage%"
+          else
+            result="$failures test falliti.."
+            coverage_str="Coverage: N/A"
+          fi
+
+          echo "- **$testname**: $coverage_str, Test Smells: $smells, Risultato: $result" >> README.md
+        done
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add README.md
-        git commit -m "Update coverage and test smells [skip ci]" || echo "No changes"
+        git commit -m "Update coverage and test smells per test class [skip ci]" || echo "No changes"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+
 
 
