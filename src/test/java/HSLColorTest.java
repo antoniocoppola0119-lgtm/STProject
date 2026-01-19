@@ -30,7 +30,7 @@ public class HSLColorTest {
         assertEquals(color.getGreen(), color.getBlue());
     }
 
-    /*@Test
+    @Test
     public void testSetHueWrapAround() {
         HSLColor color = new HSLColor();
         color.initHSLbyRGB(255, 0, 0);
@@ -39,7 +39,7 @@ public class HSLColorTest {
         color.setHue(color.getHue() + 255);
 
         assertNotEquals(oldRed, color.getRed());
-    }*/
+    }
 
     @Test
     public void testSetSaturationBounds() {
