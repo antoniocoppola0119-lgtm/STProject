@@ -46,12 +46,17 @@ jobs:
         git diff --cached --quiet || git commit -m "Update Surefire reports"
         git push || echo "Nothing to push"
 
-    - name: Extract test failures
+    - name: Extract test failures per test class
       id: testfail
       run: |
         sudo apt-get update && sudo apt-get install -y libxml2-utils
-        FAILURES=$(xmllint --xpath "sum(//testsuite/@failures)" target/surefire-reports/TEST-*.xml)
-        echo "failures=$FAILURES" >> $GITHUB_OUTPUT
+        for file in target/surefire-reports/TEST-*.xml; do
+          classname=$(basename "$file" .xml)
+          failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
+          echo "$classname failures: $failures"
+          # crea una variabile dinamica per ogni classe
+          echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
+        done
 
     - name: Parse JaCoCo XML and get coverage %
       id: coverage
