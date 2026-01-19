@@ -199,12 +199,13 @@ jobs:
         SUMMARY_FILE="reports/tests-summary.csv"
 
         if [ -f "$SUMMARY_FILE" ]; then
-          while IFS=',' read -r test failures coverage smells; do
+          tail -n +1 "$SUMMARY_FILE" | while IFS=',' read -r test failures coverage smells; do
 
             echo "### $test" >> README.md
 
             echo "- Coverage: $coverage%" >> README.md
             echo "- Test Smells: $smells" >> README.md
+
             if [ "$failures" -eq 0 ]; then
               echo "- Risultato: Tutti i test passati!" >> README.md
             else
