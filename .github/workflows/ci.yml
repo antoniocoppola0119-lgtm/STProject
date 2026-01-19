@@ -53,6 +53,9 @@ jobs:
         SUMMARY_FILE="reports/tests-summary.csv"
         echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
 
+        sudo apt-get update
+        sudo apt-get install -y libxml2-utils
+
         for file in target/surefire-reports/TEST-*.xml; do
             classname=$(basename "$file" .xml)
             failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
