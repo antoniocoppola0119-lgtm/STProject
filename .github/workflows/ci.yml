@@ -49,27 +49,15 @@ jobs:
     - name: Extract test failures per test class
       id: testfail
       run: |
-        SUMMARY_FILE="reports/tests-summary.csv"
-        rm -f "$SUMMARY_FILE"
         mkdir -p reports
-
-        sudo apt-get update && sudo apt-get install -y libxml2-utils
+        SUMMARY_FILE="reports/tests-summary.csv"
+        echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
 
         for file in target/surefire-reports/TEST-*.xml; do
-          classname=$(xmllint --xpath "string(//testsuite/@name)" "$file")
-          failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
-
-          sed -i "s/^$classname,/&$failures,/" "$SUMMARY_FILE" || \
-          echo "$classname,$failures,0,0" >> "$SUMMARY_FILE"
-        done
-
-        sudo apt-get update && sudo apt-get install -y libxml2-utils
-        for file in target/surefire-reports/TEST-*.xml; do
-          classname=$(basename "$file" .xml)
-          failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
-          echo "$classname failures: $failures"
-          # crea una variabile dinamica per ogni classe
-          echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
+            classname=$(basename "$file" .xml)
+            failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
+            echo "$classname,$failures,0,0" >> "$SUMMARY_FILE"
+            echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
         done
 
     - name: Parse JaCoCo CSV and get per-class coverage
@@ -93,9 +81,9 @@ jobs:
               echo "${classname}_coverage=$percent" >> $GITHUB_OUTPUT
 
               if grep -q "^$classname," "$SUMMARY_FILE"; then
-                sed -i "s/^$classname,[^,]*,[^,]*/$classname,0,$percent/" "$SUMMARY_FILE"
+                  sed -i "s/^\($classname,[^,]*,\)[^,]*/\1$percent/" "$SUMMARY_FILE"
               else
-                echo "$classname,0,$percent,0" >> "$SUMMARY_FILE"
+                  echo "$classname,0,$percent,0" >> "$SUMMARY_FILE"
               fi
             fi
           done
@@ -155,7 +143,17 @@ jobs:
             classname=$(basename "$testfile" .java)
             TS_SMELLS=$(echo "$rest" | awk -F',' '{sum=0; for(i=1;i<=NF;i++){gsub(/ /,"",$i); sum+=$i} print sum}')
             echo "$classname smells: $TS_SMELLS"
-            echo "$classname,0,0,$TS_SMELLS" >> "$SUMMARY_FILE"
+
+            if grep -q "^$classname," "$SUMMARY_FILE"; then
+              # aggiorna solo la quarta colonna (smells) senza cambiare le altre
+              sed -i "s/^\($classname,[^,]*,[^,]*,\)[^,]*/\1$TS_SMELLS/" "$SUMMARY_FILE"
+            else
+              # se la riga non esiste, aggiungila con default 0 per failures e coverage
+              echo "$classname,0,0,$TS_SMELLS" >> "$SUMMARY_FILE"
+            fi
+
+            # esporta per GitHub Actions
+            echo "${classname}_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
           done
 
         else
@@ -192,7 +190,7 @@ jobs:
         SUMMARY_FILE="reports/tests-summary.csv"
 
         if [ -f "$SUMMARY_FILE" ]; then
-          tail -n +1 "$SUMMARY_FILE" | while IFS=',' read -r test failures coverage smells; do
+          tail -n +2 "$SUMMARY_FILE" | while IFS=',' read -r test failures coverage smells; do
 
             echo "### $test" >> README.md
 
