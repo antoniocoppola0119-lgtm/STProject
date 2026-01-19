@@ -12,6 +12,7 @@ Questo progetto utilizza le Github Actions per effettuare, dopo un push o una pu
 * `reports/` → report generati da Surefire
 * `coverage/` → report di copertura JaCoCo
 * `pom.xml` → file di configurazione Maven
+* .github/workflows/ci.yml -> workflow di "Continous Deployment" configurato con Maven
 
 
 ### Lettura dei Risultati dei Test
@@ -31,9 +32,9 @@ Il progetto utilizza Maven con dipendenze e plugin principali:
 
 ---
 
-## CI - GitHub Actions
+## ci.yml 
 
-La pipeline automatizza:
+La pipeline configurata con Maven automatizza:
 
 1. Checkout del repository
 2. Setup di Java 21
