@@ -77,7 +77,6 @@ jobs:
           echo "jacoco.csv not found, skipping coverage per class"
         fi
 
-
     - name: Copy jacoco.csv to repo
       run: |
         mkdir -p coverage/jacoco
@@ -124,15 +123,17 @@ jobs:
           mv "$GENERATED_FILE" tools/tsdetect/output.csv
           echo "tsDetect output file: tools/tsdetect/output.csv"
 
-          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile smell1 smell2 smell3 smell4 smell5 smell6 smell7; do
+          # Leggi ogni test e calcola TS smells con awk
+          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile rest; do
             classname=$(basename "$testfile" .java)
-            total_smells=$((smell1 + smell2 + smell3 + smell4 + smell5 + smell6 + smell7))
+            total_smells=$(echo "$rest" | awk -F',' '{sum=0; for(i=1;i<=NF;i++){gsub(/ /,"",$i); sum+=$i} print sum}')
             echo "$classname smells: $total_smells"
             echo "${classname}_smells=$total_smells" >> $GITHUB_OUTPUT
           done
 
         else
           echo "No tsDetect output file found!"
+          echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
 
         git config user.name "github-actions[bot]"
