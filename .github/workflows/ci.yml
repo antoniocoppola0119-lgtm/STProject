@@ -49,6 +49,20 @@ jobs:
     - name: Extract test failures per test class
       id: testfail
       run: |
+        SUMMARY_FILE="reports/tests-summary.csv"
+        rm -f "$SUMMARY_FILE"
+        mkdir -p reports
+
+        sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+        for file in target/surefire-reports/TEST-*.xml; do
+          classname=$(xmllint --xpath "string(//testsuite/@name)" "$file")
+          failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
+
+          sed -i "s/^$classname,/&$failures,/" "$SUMMARY_FILE" || \
+          echo "$classname,$failures,0,0" >> "$SUMMARY_FILE"
+        done
+
         sudo apt-get update && sudo apt-get install -y libxml2-utils
         for file in target/surefire-reports/TEST-*.xml; do
           classname=$(basename "$file" .xml)
@@ -65,8 +79,6 @@ jobs:
 
         CSV_FILE="target/site/jacoco/jacoco.csv"
         SUMMARY_FILE="reports/tests-summary.csv"
-
-        mkdir -p reports
 
         if [ ! -f "$SUMMARY_FILE" ]; then
           echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
@@ -131,7 +143,6 @@ jobs:
       id: tsdetect
       run: |
         SUMMARY_FILE="reports/tests-summary.csv"
-        mkdir -p reports
 
         rm -f tools/tsdetect/output.csv
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
@@ -188,6 +199,8 @@ jobs:
               echo "- Test Smells: $smells" >> README.md
               echo "- Risultato: $failures test falliti" >> README.md
             fi
+
+            echo "" >> README.md
 
           done
         else
