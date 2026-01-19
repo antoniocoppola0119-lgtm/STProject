@@ -1,5 +1,7 @@
 test,failures,coverage,smells
-TEST-HSLColorTest,1,0,0
+TEST-HSLColorTest,0,0,0
 TEST-TennisScoreManagerTest,0,0,0
-HSLColorTest,0,0,64
+TennisScoreManager,0,82,0
+HSLColor,0,82,0
+HSLColorTest,0,0,57
 TennisScoreManagerTest,0,0,44
