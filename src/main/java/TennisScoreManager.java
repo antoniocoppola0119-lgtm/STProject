@@ -17,7 +17,7 @@ public class TennisScoreManager {
     private final String[] POINT_NAMES = { "Love", "15", "30", "40", "Advantage" };
     private final int MAX_SETS = 5;
 
-    // --- Costruttore e Metodi di Base ---
+    // --- Costruttore e Metodi di Base ----
 
     public TennisScoreManager() {
         // Inizializza gli array dei set a zero per pulizia, anche se non strettamente
