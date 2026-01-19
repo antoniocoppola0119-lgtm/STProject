@@ -59,6 +59,7 @@ jobs:
         for file in target/surefire-reports/TEST-*.xml; do
             classname=$(basename "$file" .xml)
             failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
+            classname=${classname#TEST-}
             echo "$classname,$failures,0,0" >> "$SUMMARY_FILE"
             echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
         done
@@ -82,6 +83,8 @@ jobs:
               echo "$classname coverage: $percent%"
 
               echo "${classname}_coverage=$percent" >> $GITHUB_OUTPUT
+
+              classname="${classname}Test"
 
               if grep -q "^$classname," "$SUMMARY_FILE"; then
                   sed -i "s/^\($classname,[^,]*,\)[^,]*/\1$percent/" "$SUMMARY_FILE"
