@@ -79,7 +79,7 @@ I reports sono salvati in reports/surefire sia in formato txt che xml.
 2. Salvare i test in `src/test/java/` con suffisso Test.java
 3. Fare push o una pull request.
 
-> La CI aggiorna automaticamente il README.md con i risultati per ogni classe.
+> Il workflow aggiorna automaticamente il README.md con i risultati per ogni classe.
 
 ---
 
