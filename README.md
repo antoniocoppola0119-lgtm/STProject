@@ -2,12 +2,12 @@
 
 ## Test Classes
 ### HSLColorTest
-- Coverage: 47%
-- Test Smells: 3
-- Risultato: Tutti i test passati!
+- Coverage: Non è stata calcolata per failures
+- Test Smells: 64
+- Risultato: 2 test falliti
 
 ### TennisScoreManagerTest
-- Coverage: 82%
+- Coverage: 0%
 - Test Smells: 44
 - Risultato: Tutti i test passati!
 
