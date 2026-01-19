@@ -58,23 +58,25 @@ jobs:
           echo "${classname}_failures=$failures" >> $GITHUB_OUTPUT
         done
 
-    - name: Parse JaCoCo CSV and get coverage per test class
+    - name: Parse JaCoCo CSV and get per-class coverage
       id: coverage
       run: |
         echo "Parsing JaCoCo CSV..."
         CSV_FILE="target/site/jacoco/jacoco.csv"
         if [ -f "$CSV_FILE" ]; then
-          tail -n +2 "$CSV_FILE" | while IFS=',' read -r group name desc instr_missed instr_covered method_missed method_covered branch_missed branch_covered; do
-            if [ "$instr_missed" != "" ] && [ "$instr_covered" != "" ]; then
+          tail -n +2 "$CSV_FILE" | while IFS=',' read -r group package classname instr_missed instr_covered branch_missed branch_covered line_missed line_covered complexity_missed complexity_covered method_missed method_covered; do
+            if [[ -n "$instr_missed" && -n "$instr_covered" ]]; then
               percent=$(( instr_covered * 100 / (instr_covered + instr_missed) ))
-              classname=$(basename "$name" .java)
               echo "$classname coverage: $percent%"
-              echo "${classname}_coverage=$percent" >> $GITHUB_OUTPUT
+              # Output per-class coverage per GitHub Actions
+              key="${classname}_coverage"
+              echo "${key}=$percent" >> $GITHUB_OUTPUT
             fi
           done
         else
           echo "jacoco.csv not found, skipping coverage per class"
         fi
+
 
     - name: Copy jacoco.csv to repo
       run: |
