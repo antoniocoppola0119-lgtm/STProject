@@ -97,8 +97,6 @@ jobs:
           echo "jacoco.csv not found, skipping coverage per class"
         fi
 
-    - name: Copy jacoco.csv to repo
-      run: |
         mkdir -p coverage/jacoco
         if [ -f target/site/jacoco/jacoco.csv ]; then
           cp target/site/jacoco/jacoco.csv coverage/jacoco/jacoco.csv
@@ -111,7 +109,8 @@ jobs:
         git diff --cached --quiet || git commit -m "Update JaCoCo coverage report"
         git push || echo "Nothing to push"
 
-    - name: Generate tsDetect input.csv
+    - name: Run tsDetect and save output
+      id: tsdetect
       run: |
         echo "Generating tsDetect input.csv..."
 
@@ -133,9 +132,6 @@ jobs:
         echo "Final input.csv:"
         cat $INPUT_FILE
 
-    - name: Run tsDetect and save output
-      id: tsdetect
-      run: |
         SUMMARY_FILE="reports/tests-summary.csv"
 
         rm -f tools/tsdetect/output.csv
@@ -151,14 +147,11 @@ jobs:
             echo "$classname smells: $TS_SMELLS"
 
             if grep -q "^$classname," "$SUMMARY_FILE"; then
-              # aggiorna solo la quarta colonna (smells) senza cambiare le altre
               sed -i "s/^\($classname,[^,]*,[^,]*,\)[^,]*/\1$TS_SMELLS/" "$SUMMARY_FILE"
             else
-              # se la riga non esiste, aggiungila con default 0 per failures e coverage
               echo "$classname,0,0,$TS_SMELLS" >> "$SUMMARY_FILE"
             fi
 
-            # esporta per GitHub Actions
             echo "${classname}_smells=$TS_SMELLS" >> $GITHUB_OUTPUT
           done
 
@@ -172,19 +165,6 @@ jobs:
         git add tools/tsdetect/output.csv
         git diff --cached --quiet || git commit -m "Update tsDetect output"
         git push origin HEAD
-
-    - name: Commit tests-summary.csv
-      run: |
-        SUMMARY_FILE="reports/tests-summary.csv"
-        if [ -f "$SUMMARY_FILE" ]; then
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$SUMMARY_FILE"
-          git diff --cached --quiet || git commit -m "Update tests-summary.csv [skip ci]"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-        else
-          echo "No tests-summary.csv to commit"
-        fi
 
     - name: Update README.md with coverage and results per test
       run: |
