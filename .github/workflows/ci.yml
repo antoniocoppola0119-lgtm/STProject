@@ -205,7 +205,7 @@ jobs:
               echo "- Test Smells: $smells" >> README.md
               echo "- Risultato: Tutti i test passati!" >> README.md
             else
-              echo "- Coverage: Non è stata calcolata per failures" >> README.md
+              echo "- Coverage: $coverage%" >> README.md
               echo "- Test Smells: $smells" >> README.md
               echo "- Risultato: $failures test falliti" >> README.md
             fi

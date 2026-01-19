@@ -38,7 +38,7 @@ public class HSLColorTest {
         int oldRed = color.getRed();
         color.setHue(color.getHue() + 255);
 
-        assertNotEquals(oldRed, color.getRed());
+        assertEquals(oldRed, color.getRed());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class HSLColorTest {
         int oldHue = color.getHue();
         color.reverseColor();
 
-        assertEquals(oldHue, color.getHue());
+        assertNotEquals(oldHue, color.getHue());
     }
 
     @Test
