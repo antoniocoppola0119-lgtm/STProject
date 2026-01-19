@@ -62,15 +62,29 @@ jobs:
       id: coverage
       run: |
         echo "Parsing JaCoCo CSV..."
+
         CSV_FILE="target/site/jacoco/jacoco.csv"
+        SUMMARY_FILE="reports/tests-summary.csv"
+
+        mkdir -p reports
+
+        if [ ! -f "$SUMMARY_FILE" ]; then
+          echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
+        fi
+
         if [ -f "$CSV_FILE" ]; then
           tail -n +2 "$CSV_FILE" | while IFS=',' read -r group package classname instr_missed instr_covered branch_missed branch_covered line_missed line_covered complexity_missed complexity_covered method_missed method_covered; do
             if [[ -n "$instr_missed" && -n "$instr_covered" ]]; then
               percent=$(( instr_covered * 100 / (instr_covered + instr_missed) ))
               echo "$classname coverage: $percent%"
-              # Output per-class coverage per GitHub Actions
-              key="${classname}_coverage"
-              echo "${key}=$percent" >> $GITHUB_OUTPUT
+
+              echo "${classname}_coverage=$percent" >> $GITHUB_OUTPUT
+
+              if grep -q "^$classname," "$SUMMARY_FILE"; then
+                sed -i "s/^$classname,[^,]*,[^,]*/$classname,0,$percent/" "$SUMMARY_FILE"
+              else
+                echo "$classname,0,$percent,0" >> "$SUMMARY_FILE"
+              fi
             fi
           done
         else
@@ -117,28 +131,42 @@ jobs:
       id: tsdetect
       run: |
         rm -f tools/tsdetect/output.csv
+
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
+
         GENERATED_FILE=$(ls -1t Output_TestSmellDetection_*.csv | head -n 1)
+        SUMMARY_FILE="reports/tests-summary.csv"
+
+        mkdir -p reports
+
+        if [ ! -f "$SUMMARY_FILE" ]; then
+          echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
+        fi
+
         if [ -f "$GENERATED_FILE" ]; then
           mv "$GENERATED_FILE" tools/tsdetect/output.csv
           echo "tsDetect output file: tools/tsdetect/output.csv"
 
-          # Leggi ogni test e calcola TS smells con awk
-          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile rest; do
+          tail -n +2 tools/tsdetect/output.csv | while IFS=',' read -r project testfile prodfile smell1 smell2 smell3 smell4 smell5 smell6 smell7; do
             classname=$(basename "$testfile" .java)
-            total_smells=$(echo "$rest" | awk -F',' '{sum=0; for(i=1;i<=NF;i++){gsub(/ /,"",$i); sum+=$i} print sum}')
+            total_smells=$((smell1 + smell2 + smell3 + smell4 + smell5 + smell6 + smell7))
+
             echo "$classname smells: $total_smells"
             echo "${classname}_smells=$total_smells" >> $GITHUB_OUTPUT
-          done
 
+            if grep -q "^$classname," "$SUMMARY_FILE"; then
+              sed -i "s/^$classname,\([^,]*\),\([^,]*\),[^,]*/$classname,\1,\2,$total_smells/" "$SUMMARY_FILE"
+            else
+              echo "$classname,0,0,$total_smells" >> "$SUMMARY_FILE"
+            fi
+          done
         else
           echo "No tsDetect output file found!"
-          echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add tools/tsdetect/output.csv
+        git add tools/tsdetect/output.csv reports/tests-summary.csv
         git diff --cached --quiet || git commit -m "Update tsDetect output"
         git push origin HEAD
 
@@ -149,32 +177,31 @@ jobs:
         sed -i '/^## Test Classes$/,$d' README.md
         echo "## Test Classes" >> README.md
 
-        for var in $(compgen -v | grep '_failures$'); do
-          testname=${var%_failures}
-          failures=${!var:-0}
-          smells_var="${testname}_smells"
-          smells=${!smells_var:-0}
+        SUMMARY_FILE="reports/tests-summary.csv"
 
-          if [ "$failures" -eq 0 ]; then
-            coverage_var="${testname}_coverage"
-            coverage=${!coverage_var:-0}
-            result="Tutti i test passati!"
-            coverage_str="Coverage: $coverage%"
-          else
-            result="$failures test falliti"
-            coverage_str="Coverage: N/A"
-          fi
+        if [ -f "$SUMMARY_FILE" ]; then
+          tail -n +2 "$SUMMARY_FILE" | while IFS=',' read -r test failures coverage smells; do
 
-          echo "### $testname" >> README.md
-          echo "- $coverage_str" >> README.md
-          echo "- Test Smells: $smells" >> README.md
-          echo "- Risultato: $result" >> README.md
-        done
+            echo "### $test" >> README.md
+
+            if [ "$failures" -eq 0 ]; then
+              echo "- Coverage: $coverage%" >> README.md
+              echo "- Test Smells: $smells" >> README.md
+              echo "- Risultato: Tutti i test passati!" >> README.md
+            else
+              echo "- Coverage: N/A" >> README.md
+              echo "- Test Smells: $smells" >> README.md
+              echo "- Risultato: $failures test falliti" >> README.md
+            fi
+
+          done
+        else
+          echo "## Test Classes" >> README.md
+          echo "_Nessun dato disponibile_" >> README.md
+        fi
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add README.md
         git commit -m "Update coverage and test smells per test class [skip ci]" || echo "No changes"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-
-
