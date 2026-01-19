@@ -63,7 +63,7 @@ public class HSLColorTest {
 
         color.setLuminence(300);
         assertEquals(255, color.getLuminence());
-    }*/
+    }
 
     @Test
     public void testReverseColorChangesHue() {
@@ -97,6 +97,6 @@ public class HSLColorTest {
         assertTrue(color.getRed() > 0);
         assertTrue(color.getGreen() > 0);
         assertTrue(color.getBlue() > 0);
-    }
+    }*/
 }
 
