@@ -176,6 +176,19 @@ jobs:
         git diff --cached --quiet || git commit -m "Update tsDetect output"
         git push origin HEAD
 
+    - name: Commit tests-summary.csv
+      run: |
+        SUMMARY_FILE="reports/tests-summary.csv"
+        if [ -f "$SUMMARY_FILE" ]; then
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$SUMMARY_FILE"
+          git diff --cached --quiet || git commit -m "Update tests-summary.csv [skip ci]"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+        else
+          echo "No tests-summary.csv to commit"
+        fi
+
     - name: Update README.md with coverage and results per test
       run: |
         echo "Updating README.md for each test class..."
