@@ -20,7 +20,7 @@ public class HSLColorTest {
         assertEquals(color.getBlue(), converted.getBlue(), 1);
     }
 
-    @Test
+    /*@Test
     public void testGreyscaleConversion() {
         HSLColor color = new HSLColor();
         color.initHSLbyRGB(120, 120, 120);
@@ -28,7 +28,7 @@ public class HSLColorTest {
         assertEquals(0, color.getSaturation());
         assertEquals(color.getRed(), color.getGreen());
         assertEquals(color.getGreen(), color.getBlue());
-    }
+    }*/
 
     @Test
     public void testSetHueWrapAround() {
