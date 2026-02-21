@@ -1,3 +1,5 @@
+[![Java CI with Maven + Coverage + tsDetect](https://github.com/antoniocoppola0119-lgtm/STProject/actions/workflows/ci.yml/badge.svg)](https://github.com/antoniocoppola0119-lgtm/STProject/actions/workflows/ci.yml)
+
 **Test Results:**
 
 ## Test Classes
