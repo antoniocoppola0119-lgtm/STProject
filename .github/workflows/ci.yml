@@ -1,4 +1,4 @@
-name: Java CI with Maven + Coverage + tsDetect
+name: Workflow for Testing
 
 on:
   push:
