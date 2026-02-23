@@ -189,7 +189,7 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
     
-        git add reports/tests-summary.csv tools/tsdetect/output.csv README.md
+        git add reports/tests_summary.csv tools/tsdetect/output.csv README.md
     
         git diff --cached --quiet || git commit -m "Update test summary, coverage and smells [skip ci]"
     
