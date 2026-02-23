@@ -41,12 +41,6 @@ jobs:
           echo "Surefire reports not found, skipping copy"
         fi
 
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add reports/surefire || echo "Nothing to add"
-        git diff --cached --quiet || git commit -m "Update Surefire reports"
-        git push || echo "Nothing to push"
-
     - name: Extract test failures per test class
       id: testfail
       run: |
@@ -104,11 +98,6 @@ jobs:
         else
           echo "jacoco.csv not found, skipping copy"
         fi
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add coverage/jacoco/jacoco.csv || echo "Nothing to add"
-        git diff --cached --quiet || git commit -m "Update JaCoCo coverage report"
-        git push || echo "Nothing to push"
 
     - name: Run tsDetect and save output
       id: tsdetect
@@ -161,12 +150,6 @@ jobs:
           echo "ts_smells=0" >> $GITHUB_OUTPUT
         fi
 
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add tools/tsdetect/output.csv
-        git diff --cached --quiet || git commit -m "Update tsDetect output"
-        git push origin HEAD
-
     - name: Update README.md with coverage and results per test
       run: |
         echo "Updating README.md for each test class..."
@@ -199,8 +182,15 @@ jobs:
           echo "_Nessun dato disponibile_" >> README.md
         fi
 
+    - name: Final commit and push results
+      run: |
+        echo "Final commit of reports..."
+    
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add README.md
-        git commit -m "Update coverage and test smells per test class [skip ci]" || echo "No changes"
+    
+        git add reports/tests-summary.csv tools/tsdetect/output.csv README.md
+    
+        git diff --cached --quiet || git commit -m "Update test summary, coverage and smells [skip ci]"
+    
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
