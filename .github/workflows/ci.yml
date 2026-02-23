@@ -45,13 +45,13 @@ jobs:
       id: testfail
       run: |
         mkdir -p reports
-        SUMMARY_FILE="reports/tests-summary.csv"
+        SUMMARY_FILE="reports/tests_summary.csv"
         echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
 
         sudo apt-get update
         sudo apt-get install -y libxml2-utils
 
-        for file in target/surefire-reports/TEST-*.xml; do
+        for file in target/surefire_reports/TEST-*.xml; do
             classname=$(basename "$file" .xml)
             failures=$(xmllint --xpath "string(//testsuite/@failures)" "$file")
             classname=${classname#TEST-}
@@ -65,7 +65,7 @@ jobs:
         echo "Parsing JaCoCo CSV..."
 
         CSV_FILE="target/site/jacoco/jacoco.csv"
-        SUMMARY_FILE="reports/tests-summary.csv"
+        SUMMARY_FILE="reports/tests_summary.csv"
 
         if [ ! -f "$SUMMARY_FILE" ]; then
           echo "test,failures,coverage,smells" > "$SUMMARY_FILE"
@@ -122,7 +122,7 @@ jobs:
         echo "Final input.csv:"
         cat $INPUT_FILE
 
-        SUMMARY_FILE="reports/tests-summary.csv"
+        SUMMARY_FILE="reports/tests_summary.csv"
 
         rm -f tools/tsdetect/output.csv
         java -jar tools/tsdetect/TestSmellDetector.jar tools/tsdetect/input.csv
@@ -157,7 +157,7 @@ jobs:
         sed -i '/^## Test Classes$/,$d' README.md
         echo "## Test Classes" >> README.md
 
-        SUMMARY_FILE="reports/tests-summary.csv"
+        SUMMARY_FILE="reports/tests_summary.csv"
 
         if [ -f "$SUMMARY_FILE" ]; then
           tail -n +2 "$SUMMARY_FILE" | while IFS=',' read -r test failures coverage smells; do
